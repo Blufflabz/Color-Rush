@@ -20,19 +20,31 @@ public class PlayerController : MonoBehaviour
 
     [Header("Audio and UI")]
     public AudioSource switchSound;
+    public GameObject panelIng;
+    public GameObject panelGO;
     public GameObject ScreenUI;
-    public TextMeshProUGUI ScoreText;
-    public TextMeshProUGUI HScoreText;
+    [Header("Ingame UI Texts")]
+    public TextMeshProUGUI ScoreTextIngame;
+    public TextMeshProUGUI maxScoreIngameText;
+    [Header("Game Over UI Texts")]
+    public TextMeshProUGUI ScoreTextGameOver;
+    public TextMeshProUGUI HighScoreTextGameOver;
     private AudioSource Sound;
 
     private int Score = 0;
     private int MScore;
     private bool isGameOver = false;
+    
 
 
     void Start()
     {
+        panelGO.SetActive(false);
+        panelIng.SetActive(true);
+
         loadScore();
+        maxScoreIngameText.text = "High Score: " + MScore.ToString();
+        
         Sound = GetComponent<AudioSource>();
         Mat = GetComponent<Renderer>();
         Mat.material = blueMaterial;
@@ -68,7 +80,7 @@ public class PlayerController : MonoBehaviour
         if (!isGameOver)
         {
             Score += 1;
-            ScoreText.text = Score.ToString();
+            ScoreTextIngame.text = "Score : " + Score.ToString();
         }
     }
 
@@ -85,12 +97,15 @@ public class PlayerController : MonoBehaviour
 
                 Sound.Play();
 
-                ScreenUI.SetActive(true);
+                panelIng.SetActive(false);
+                panelGO.SetActive(true);
 
                 savemaxScore();
                 loadScore();
 
-                HScoreText.text = "Personal Record:\n" + MScore.ToString();
+
+                HighScoreTextGameOver.text = MScore.ToString();
+                ScoreTextGameOver.text = Score.ToString();
 
                 Time.timeScale = 0.7f;
             }
